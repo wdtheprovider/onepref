@@ -1,4 +1,3 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnePref {
@@ -13,14 +12,12 @@ class OnePref {
         value,
       );
 
-  static Future setPremium(bool value) async =>
-      await _preferences?.setBool(
+  static Future setPremium(bool value) async => await _preferences?.setBool(
         "onePref_Premium",
         value,
       );
 
-  static Future setRemoveAds(bool value) async =>
-      await _preferences?.setBool(
+  static Future setRemoveAds(bool value) async => await _preferences?.setBool(
         "onePref_RemoveAds",
         value,
       );
@@ -45,8 +42,10 @@ class OnePref {
 
 // Getter Methods
   static bool? getBool(String key) => _preferences?.getBool(key) ?? false;
-  static bool? getPremium() => _preferences?.getBool("onePref_Premium") ?? false;
-  static bool? getRemoveAds() => _preferences?.getBool("onePref_RemoveAds") ?? false;
+  static bool? getPremium() =>
+      _preferences?.getBool("onePref_Premium") ?? false;
+  static bool? getRemoveAds() =>
+      _preferences?.getBool("onePref_RemoveAds") ?? false;
   static String? getString(String key) => _preferences?.getString(key);
   static int? getInt(String key) => _preferences?.getInt(key) ?? 0;
   static double? getDouble(String key) => _preferences?.getDouble(key) ?? 0.0;
