@@ -1,0 +1,56 @@
+
+import 'dart:io';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:onepref/onepref.dart';
+
+
+
+class IApEngine {
+  InAppPurchase inAppPurchase = InAppPurchase.instance;
+
+  Future<bool> getIsAvailable() async {
+    return await inAppPurchase.isAvailable();
+  }
+
+  Future<ProductDetailsResponse> queryProducts(
+      List<ProductId> storeProductIds) async {
+    return await inAppPurchase
+        .queryProductDetails(getProductIdsOnly(storeProductIds).toSet());
+  }
+
+  void handlePurchase(
+      ProductDetails productDetails, List<ProductId> storeProductIds) {
+    late PurchaseParam purchaseParam;
+    Platform.isAndroid
+        ? purchaseParam = GooglePlayPurchaseParam(
+      productDetails: productDetails,
+      applicationUserName: null,
+    )
+        : purchaseParam = PurchaseParam(
+      productDetails: productDetails,
+      applicationUserName: null,
+    );
+
+    for (var product in storeProductIds) {
+      if (product.id == productDetails.id) {
+        product.isConsumable
+            ? IApEngine()
+            .inAppPurchase
+            .buyConsumable(purchaseParam: purchaseParam, autoConsume: true)
+            : IApEngine()
+            .inAppPurchase
+            .buyNonConsumable(purchaseParam: purchaseParam);
+      }
+    }
+  }
+
+  List<String> getProductIdsOnly(List<ProductId> storeProductIds) {
+    List<String> temp = <String>[];
+    for (var product in storeProductIds) {
+      temp.add(product.id);
+    }
+    return temp;
+  }
+
+}
