@@ -1,10 +1,7 @@
-
 import 'dart:io';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:onepref/onepref.dart';
-
-
 
 class IApEngine {
   InAppPurchase inAppPurchase = InAppPurchase.instance;
@@ -20,27 +17,31 @@ class IApEngine {
   }
 
   void handlePurchase(
-      ProductDetails productDetails, List<ProductId> storeProductIds) {
+      ProductDetails productDetails, List<ProductId> storeProductIds)  async {
     late PurchaseParam purchaseParam;
     Platform.isAndroid
         ? purchaseParam = GooglePlayPurchaseParam(
-      productDetails: productDetails,
-      applicationUserName: null,
-    )
+            productDetails: productDetails,
+            applicationUserName: null,
+          )
         : purchaseParam = PurchaseParam(
-      productDetails: productDetails,
-      applicationUserName: null,
-    );
+            productDetails: productDetails,
+            applicationUserName: null,
+          );
 
     for (var product in storeProductIds) {
       if (product.id == productDetails.id) {
-        product.isConsumable
-            ? IApEngine()
-            .inAppPurchase
-            .buyConsumable(purchaseParam: purchaseParam, autoConsume: true)
-            : IApEngine()
-            .inAppPurchase
-            .buyNonConsumable(purchaseParam: purchaseParam);
+        if (product.isConsumable) {
+          print(("iApEngineDebug: buying consumable for id ${productDetails.id}"));
+        await IApEngine()
+              .inAppPurchase
+              .buyConsumable(purchaseParam: purchaseParam, autoConsume: product.isConsumable);
+        } else {
+          print(("iApEngineDebug: buying nonConsumable for id ${productDetails.id}"));
+        await IApEngine()
+              .inAppPurchase
+              .buyNonConsumable(purchaseParam: purchaseParam);
+        }
       }
     }
   }
@@ -52,5 +53,4 @@ class IApEngine {
     }
     return temp;
   }
-
 }

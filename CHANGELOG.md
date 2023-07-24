@@ -1,13 +1,16 @@
-## 0.0.5
+## 0.0.11
+Updated ProductId class  
+- bool? isSubscription;
+- bool? isOneTimePurchase;
 
-Added
-- `setPremium(bool v)`
-- `setRemoveAds(bool v)`
-- `getPremium()`
-- `getRemoveAds()`
+## 0.0.10
+Updated packages
 
-## 0.0.6
-fixes
+## 0.0.9
+added debugs messages
+
+## 0.0.8
+Added example
 
 ## 0.0.7
 
@@ -18,6 +21,17 @@ Added new functions
 - `getProductIdsOnly( List<ProductId> storeProductIds)` - this function only returns a list<String> of product Ids
 
 Added new classes
- - ``ProductId`` - to define the products
-## 0.0.8
-Added example
+- ``ProductId`` - to define the products
+
+## 0.0.6
+fixes
+
+## 0.0.5
+
+Added
+- `setPremium(bool v)`
+- `setRemoveAds(bool v)`
+- `getPremium()`
+- `getRemoveAds()`
+
+
