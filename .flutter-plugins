@@ -1,10 +1,10 @@
 # This is a generated file; do not edit or check into version control.
-in_app_purchase=/Users/dingaan/.pub-cache/hosted/pub.dev/in_app_purchase-3.1.7/
-in_app_purchase_android=/Users/dingaan/.pub-cache/hosted/pub.dev/in_app_purchase_android-0.3.0+6/
-in_app_purchase_storekit=/Users/dingaan/.pub-cache/hosted/pub.dev/in_app_purchase_storekit-0.3.6+4/
+in_app_purchase=/Users/dingaan/.pub-cache/hosted/pub.dev/in_app_purchase-3.1.10/
+in_app_purchase_android=/Users/dingaan/.pub-cache/hosted/pub.dev/in_app_purchase_android-0.3.0+13/
+in_app_purchase_storekit=/Users/dingaan/.pub-cache/hosted/pub.dev/in_app_purchase_storekit-0.3.6+7/
 path_provider_linux=/Users/dingaan/.pub-cache/hosted/pub.dev/path_provider_linux-2.1.11/
 path_provider_windows=/Users/dingaan/.pub-cache/hosted/pub.dev/path_provider_windows-2.1.7/
-shared_preferences=/Users/dingaan/.pub-cache/hosted/pub.dev/shared_preferences-2.1.2/
+shared_preferences=/Users/dingaan/.pub-cache/hosted/pub.dev/shared_preferences-2.2.1/
 shared_preferences_android=/Users/dingaan/.pub-cache/hosted/pub.dev/shared_preferences_android-2.1.4/
 shared_preferences_foundation=/Users/dingaan/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.2.2/
 shared_preferences_linux=/Users/dingaan/.pub-cache/hosted/pub.dev/shared_preferences_linux-2.2.0/

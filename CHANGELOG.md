@@ -1,3 +1,13 @@
+## 0.0.14
+- [Updated] Updated the example to solve the one time purchase getting canceled, Please read the comments I added for clear understanding.
+
+
+## 0.0.13
+- [Updated] Updated packages
+- [New] Added subscription Upgrade/Downgrade
+- [New] Added support for iOS and MacOS
+- [Updated] Updated the example
+
 ## 0.0.11
 Updated ProductId class  
 - bool? isSubscription;
