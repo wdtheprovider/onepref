@@ -123,7 +123,6 @@ class _MyAppState extends State<MyApp> {
 
             // else if will handle restore purchase
           } else if (purchaseDetails.status == PurchaseStatus.restored) {
-            //  get the ProductId Object from the productIds
             updateOneTimePurchaseAndSubscritpion(purchaseDetails.productID);
           }
 
@@ -143,6 +142,8 @@ class _MyAppState extends State<MyApp> {
 
 //added this function to handle the subscription and one timme purchase
   void updateOneTimePurchaseAndSubscritpion(var purchasedProductId) {
+
+    //  get the ProductId Object from the productIds
     var productId =
         _productsIds.where((element) => element.id == purchasedProductId).first;
 
