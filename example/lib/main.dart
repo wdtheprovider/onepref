@@ -92,13 +92,12 @@ class _MyAppState extends State<MyApp> {
                       .first
                       .isConsumable ==
                   true) {
+            /// (_productsIds.where((element) => element.id == purchaseDetails.productID).first.isConsumable ==  true)
+            ///
+            ///
+            ///The above check has been added for not consuming a non-consumable
+            ///
 
-                    /// (_productsIds.where((element) => element.id == purchaseDetails.productID).first.isConsumable ==  true)
-                    ///
-                    ///
-                    ///The above check has been added for not consuming a non-consumable
-                    ///
-                
             final InAppPurchaseAndroidPlatformAddition androidPlatformAddition =
                 iApEngine.inAppPurchase.getPlatformAddition<
                     InAppPurchaseAndroidPlatformAddition>();
@@ -110,17 +109,28 @@ class _MyAppState extends State<MyApp> {
                 );
           }
 
+          print(purchaseDetails.productID);
+          print(purchaseDetails.pendingCompletePurchase);
+          print(purchaseDetails.status);
+
           //handles pending purchases
           if (purchaseDetails.pendingCompletePurchase) {
             await iApEngine.inAppPurchase
                 .completePurchase(purchaseDetails)
-                .then(
-                  (value) => setState(() => {
-                        OnePref.setPremium(true), // activate the premium
-                        isSubscribed = OnePref.getPremium() ?? false,
-                      }),
-                );
+                .then((value) {
+              updateOneTimePurchaseAndSubscritpion(purchaseDetails.productID);
+            });
+
+            // else if will handle restore purchase
+          } else if (purchaseDetails.status == PurchaseStatus.restored) {
+            //  get the ProductId Object from the productIds
+            updateOneTimePurchaseAndSubscritpion(purchaseDetails.productID);
           }
+
+
+
+
+
         }
       }
     } else {
@@ -128,6 +138,23 @@ class _MyAppState extends State<MyApp> {
         OnePref.setPremium(false); // de-activate the premium
         isSubscribed = OnePref.getPremium() ?? false;
       });
+    }
+  }
+
+//added this function to handle the subscription and one timme purchase
+  void updateOneTimePurchaseAndSubscritpion(var purchasedProductId) {
+    var productId =
+        _productsIds.where((element) => element.id == purchasedProductId).first;
+
+    if (productId.isOneTimePurchase ?? false) {
+      setState(() {
+        OnePref.setBool("oneTimePurchase", true);
+      });
+    } else if (productId.isSubscription ?? false) {
+      setState(() => {
+            OnePref.setPremium(true), // activate the premium
+            isSubscribed = OnePref.getPremium() ?? false,
+          });
     }
   }
 
