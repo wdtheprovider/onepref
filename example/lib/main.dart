@@ -29,13 +29,17 @@ class _MyAppState extends State<MyApp> {
   // create a new instance of this class
   IApEngine iApEngine = IApEngine();
   bool isSubscribed = false;
+  bool oneTimeProductPurchased = false;
 
   bool subExisting = false;
 
   //Use ProductId type to create product ids
   final List<ProductId> _productsIds = [
-    ProductId(id: "test_sub_weekly1", isConsumable: false),
-    ProductId(id: "test_remove_ads1", isConsumable: false),
+    ProductId(
+      id: "test_remove_ads1",
+      isConsumable: false,
+      isOneTimePurchase: true,
+    ),
   ];
 
   @override
@@ -125,15 +129,12 @@ class _MyAppState extends State<MyApp> {
           } else if (purchaseDetails.status == PurchaseStatus.restored) {
             updateOneTimePurchaseAndSubscritpion(purchaseDetails.productID);
           }
-
-
-
-
-
         }
       }
     } else {
       setState(() {
+        oneTimeProductPurchased = false;
+        OnePref.setBool("oneTimePurchase", false);
         OnePref.setPremium(false); // de-activate the premium
         isSubscribed = OnePref.getPremium() ?? false;
       });
@@ -142,13 +143,13 @@ class _MyAppState extends State<MyApp> {
 
 //added this function to handle the subscription and one timme purchase
   void updateOneTimePurchaseAndSubscritpion(var purchasedProductId) {
-
     //  get the ProductId Object from the productIds
     var productId =
         _productsIds.where((element) => element.id == purchasedProductId).first;
 
     if (productId.isOneTimePurchase ?? false) {
       setState(() {
+        oneTimeProductPurchased = true;
         OnePref.setBool("oneTimePurchase", true);
       });
     } else if (productId.isSubscription ?? false) {
@@ -336,6 +337,18 @@ class _MyAppState extends State<MyApp> {
                               ),
                             )),
                         itemCount: _products.length,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 25.0, horizontal: 25.0),
+                    child: Text(
+                      "One Time Product Purchased: $oneTimeProductPurchased",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
                       ),
                     ),
                   ),

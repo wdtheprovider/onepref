@@ -3,10 +3,10 @@ description: A package you can use to implement in app purchases easily and work
 version: 0.0.14
 homepage: https://github.com/wdtheprovider/onepref
 
-environment:
+environment:                      
   sdk: '>=3.0.3 <4.0.0'
   flutter: ">=1.17.0"
-
+§q
 dependencies:
   flutter:
     sdk: flutter
