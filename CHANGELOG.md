@@ -1,3 +1,7 @@
+## 0.0.15
+
+- [Updated] packages to include Response code 12 for network error.
+
 ## 0.0.14
 - [Updated] Updated the example to solve the one time purchase getting canceled, Please read the comments I added for clear understanding.
 

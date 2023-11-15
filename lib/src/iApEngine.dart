@@ -8,27 +8,24 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:onepref/onepref.dart';
 
 class IApEngine {
-
-  
   InAppPurchase inAppPurchase = InAppPurchase.instance;
 
+  /// Checks if the store is available to get products.
   Future<bool> getIsAvailable() async {
     return await inAppPurchase.isAvailable();
   }
 
+  ///  Returns a list of products from the Play / App Store.
   Future<ProductDetailsResponse> queryProducts(
       List<ProductId> storeProductIds) async {
     return await inAppPurchase
         .queryProductDetails(getProductIdsOnly(storeProductIds).toSet());
   }
 
+  /// A Function that launching the purchase flow dialog for a user to purchase.
   void handlePurchase(
       ProductDetails productDetails, List<ProductId> storeProductIds) async {
-
-
     late PurchaseParam purchaseParam;
-
-
     Platform.isAndroid
         ? purchaseParam = GooglePlayPurchaseParam(
             productDetails: productDetails,
@@ -57,6 +54,7 @@ class IApEngine {
     }
   }
 
+  /// A function that only returns the list of product ids
   List<String> getProductIdsOnly(List<ProductId> storeProductIds) {
     List<String> temp = <String>[];
     for (var product in storeProductIds) {
@@ -65,6 +63,7 @@ class IApEngine {
     return temp;
   }
 
+  /// Handles the upgrade and downgrade of subscriptions in android automatically
   Future<bool> upgradeOrDowngradeSubscription(
     PurchaseDetails currentSubPurchaseDetails,
     ProductDetails newSubProductDetails,
