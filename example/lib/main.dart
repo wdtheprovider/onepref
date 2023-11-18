@@ -1,11 +1,8 @@
 import 'package:example/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 // ignore: depend_on_referenced_packages
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-
 import 'package:onepref/onepref.dart';
 
 void main() async {
@@ -51,11 +48,11 @@ class _MyAppState extends State<MyApp> {
     iApEngine.inAppPurchase.purchaseStream.listen((purchaseDetailsList) {
       //listen to the purchases, it will be called everytime there's a purchase or restore purchase.
       if (purchaseDetailsList.isNotEmpty) {
-        subExisting = true;
         _currentPurchaseDetails.addAll(purchaseDetailsList);
         print(_currentPurchaseDetails[0].productID);
       }
-      listenPurchasedActivities(purchaseDetailsList);
+
+      listener(purchaseDetailsList);
     }, onDone: () {
       print("onDone");
     }, onError: (Object error) {
@@ -64,6 +61,28 @@ class _MyAppState extends State<MyApp> {
 
     //get products
     getProducts();
+  }
+
+  void listener(List<PurchaseDetails> purchaseDetailsList) async {
+    await iApEngine
+        .purchaseListener(
+            purchaseDetailsList: purchaseDetailsList, productsIds: _productsIds)
+        .then((value) {
+      // Value will be a Map
+      // key - message  = This explains the object
+      // key - purchaseComplete: boolean = shows that the purchase has been purchased
+      // key - purchaseRestore: boolean = shows that there was a subscription or one time purchase that is restore
+      // key - purchaseConsumed: boolean = shows that the consumable item is consumed and ready to be bought again.
+      // key - productId: String = The product Id purchased or restored
+
+      // How to get the values using the keys
+      // value['purchaseComplete'] = will result to either false or true
+
+      if (value['purchaseRestore'] || value['purchaseComplete']) {
+        subExisting = true;
+        print("listener123: restored or purchased");
+      }
+    });
   }
 
   void getProducts() async {
@@ -78,67 +97,6 @@ class _MyAppState extends State<MyApp> {
                   })
             }
         });
-  }
-
-  Future<void> listenPurchasedActivities(List<PurchaseDetails> list) async {
-    if (list.isNotEmpty) {
-      for (var purchaseDetails in list) {
-        if (purchaseDetails.status == PurchaseStatus.purchased ||
-            purchaseDetails.status == PurchaseStatus.restored) {
-          //This is for the android
-          if (Platform.isAndroid &&
-              iApEngine
-                  .getProductIdsOnly(_productsIds)
-                  .contains(purchaseDetails.productID) &&
-              _productsIds
-                      .where(
-                          (element) => element.id == purchaseDetails.productID)
-                      .first
-                      .isConsumable ==
-                  true) {
-            /// (_productsIds.where((element) => element.id == purchaseDetails.productID).first.isConsumable ==  true)
-            ///
-            ///
-            ///The above check has been added for not consuming a non-consumable
-            ///
-
-            final InAppPurchaseAndroidPlatformAddition androidPlatformAddition =
-                iApEngine.inAppPurchase.getPlatformAddition<
-                    InAppPurchaseAndroidPlatformAddition>();
-            await androidPlatformAddition.consumePurchase(purchaseDetails).then(
-                  (value) => setState(() => {
-                        OnePref.setPremium(true), // activate the premium
-                        isSubscribed = OnePref.getPremium() ?? false,
-                      }),
-                );
-          }
-
-          print(purchaseDetails.productID);
-          print(purchaseDetails.pendingCompletePurchase);
-          print(purchaseDetails.status);
-
-          //handles pending purchases
-          if (purchaseDetails.pendingCompletePurchase) {
-            await iApEngine.inAppPurchase
-                .completePurchase(purchaseDetails)
-                .then((value) {
-              updateOneTimePurchaseAndSubscritpion(purchaseDetails.productID);
-            });
-
-            // else if will handle restore purchase
-          } else if (purchaseDetails.status == PurchaseStatus.restored) {
-            updateOneTimePurchaseAndSubscritpion(purchaseDetails.productID);
-          }
-        }
-      }
-    } else {
-      setState(() {
-        oneTimeProductPurchased = false;
-        OnePref.setBool("oneTimePurchase", false);
-        OnePref.setPremium(false); // de-activate the premium
-        isSubscribed = OnePref.getPremium() ?? false;
-      });
-    }
   }
 
 //added this function to handle the subscription and one timme purchase
@@ -229,7 +187,7 @@ class _MyAppState extends State<MyApp> {
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: isSubscribed
+                                  color: subExisting
                                       ? Colors.green
                                       : Colors.orange,
                                 ),
