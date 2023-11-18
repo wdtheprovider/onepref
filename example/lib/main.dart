@@ -63,7 +63,10 @@ class _MyAppState extends State<MyApp> {
     getProducts();
   }
 
+
   void listener(List<PurchaseDetails> purchaseDetailsList) async {
+
+    //Add the purchaseListener function
     await iApEngine
         .purchaseListener(
             purchaseDetailsList: purchaseDetailsList, productsIds: _productsIds)

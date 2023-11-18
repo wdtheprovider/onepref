@@ -1,3 +1,9 @@
+## 0.0.16
+
+- [Add] a purchasedListener in the IApEngine to minimize the codes (Check the example).
+- [Updated] added try catches for more debugging benefits.
+- [Fixed] fixed some minor bugs.
+
 ## 0.0.15
 
 - [Updated] packages to include Response code 12 for network error.
