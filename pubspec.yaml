@@ -1,6 +1,6 @@
 name: onepref
 description: A package you can use to implement in app purchases easily and work with sharePrefences, other useful widgets to make your development easily.
-version: 0.0.16
+version: 0.0.17
 homepage: https://github.com/wdtheprovider/onepref
 
 environment:                      
@@ -10,11 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.2.2
-  in_app_purchase_android: ^0.3.0+15
-  in_app_purchase_platform_interface: ^1.3.6
-  in_app_purchase_storekit: ^0.3.6+7
-  in_app_purchase: ^3.1.11
+  shared_preferences: ^2.3.2
+  in_app_purchase_android: ^0.3.6+6
+  in_app_purchase_platform_interface: ^1.4.0
+  in_app_purchase_storekit: ^0.3.17+3
+  in_app_purchase: ^3.2.0
 
 dev_dependencies:
   flutter_test:

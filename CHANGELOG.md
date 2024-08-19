@@ -1,3 +1,7 @@
+## 0.0.17
+
+- Update packages and resolved some deprecations in the code.
+
 ## 0.0.16
 
 - [Add] a purchasedListener in the IApEngine to minimize the codes (Check the example).

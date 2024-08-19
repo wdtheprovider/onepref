@@ -15,7 +15,7 @@ class IApEngine {
     return await inAppPurchase.isAvailable();
   }
 
-  ///  Returns a list of products from the Play / App Store.
+  /// Returns a list of products from the Play / App Store.
   Future<ProductDetailsResponse> queryProducts(
       List<ProductId> storeProductIds) async {
     return await inAppPurchase
@@ -83,7 +83,7 @@ class IApEngine {
       changeSubscriptionParam: ChangeSubscriptionParam(
         oldPurchaseDetails:
             currentSubPurchaseDetails as GooglePlayPurchaseDetails,
-        prorationMode: ProrationMode.immediateWithTimeProration,
+        replacementMode: ReplacementMode.chargeProratedPrice,
       ),
     );
     return await IApEngine()

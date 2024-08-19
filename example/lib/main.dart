@@ -112,9 +112,9 @@ class _MyAppState extends State<MyApp> {
         OnePref.setBool("oneTimePurchase", true);
       });
     } else if (productId.isSubscription ?? false) {
-      setState(() => {
-            OnePref.setPremium(true), // activate the premium
-            isSubscribed = OnePref.getPremium() ?? false,
+      setState(() {
+            OnePref.setPremium(true); // activate the premium
+            isSubscribed = OnePref.getPremium() ?? false;
           });
     }
   }
