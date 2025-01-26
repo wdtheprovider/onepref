@@ -2,9 +2,9 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:onepref/onepref.dart';
 
 class IApEngine {
