@@ -1,6 +1,6 @@
 name: onepref
 description: A package you can use to implement in app purchases easily and work with sharePrefences, other useful widgets to make your development easily.
-version: 0.0.18
+version: 0.0.19
 homepage: https://github.com/wdtheprovider/onepref
 
 environment:
