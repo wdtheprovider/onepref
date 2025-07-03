@@ -2,6 +2,11 @@
 
 - Update packages and resolved some deprecations in the code.
 - Updates in_app_purchase_android to 0.4.0.
+
+## 0.0.19
+
+- Update packages and resolved some deprecations in the code.
+- Updates in_app_purchase_android to 0.4.0.
 - Updates minimum supported SDK version to Flutter 3.24/Dart 3.5.
 
 - ## 0.0.17
