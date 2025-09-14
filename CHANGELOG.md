@@ -1,4 +1,11 @@
-## 0.0.19
+## 0.0.21
+
+- Update packages and resolved some deprecations in the code.
+- Updates in_app_purchase_android to 0.4.0+4
+- Fixed bugs
+- support 16kb memory page size
+
+## 0.0.20
 
 - Update packages and resolved some deprecations in the code.
 - Updates in_app_purchase_android to 0.4.0.
