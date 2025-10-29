@@ -53,7 +53,7 @@ late final List<PurchaseDetails> _purchases = <PurchaseDetails>[];
 late bool _isAvailable = false;
 late bool _purchasePending = false;
 
-IApEngine iApEngine = IApEngine();
+InAppEngine inAppEngine = InAppEngine();
 
 ATTENTATION !!!!!  ATTENTATION !!!!!   ATTENTATION !!!!!
 //(Please make sure you have configured in App purchase for your app)
@@ -62,7 +62,7 @@ ATTENTATION !!!!!  ATTENTATION !!!!!   ATTENTATION !!!!!
 void initState() {
   super.initState();
   
-  iApEngine.inAppPurchase.purchaseStream.listen(
+  inAppEngine.inAppPurchase.purchaseStream.listen(
           (List<PurchaseDetails> purchaseDetailsList) {
         //listen to the purchases
         listenToPurchaseUpdated(purchaseDetailsList);
@@ -73,9 +73,9 @@ void initState() {
 
 void getProducts() async {
     // Querying the products from Google Play
-    await iApEngine.getIsAvailable().then((isAvailable) async {
+    await inAppEngine.getIsAvailable().then((isAvailable) async {
       if (isAvailable) {
-        await iApEngine
+        await inAppEngine
             .queryProducts(Constants.storeProductIds)
             .then((value) => {
                   setState(() {
@@ -97,7 +97,7 @@ void getProducts() async {
 
 ```dart
  TextButton(onPressed: () {
-     iApEngine.handlePurchase(_products[selectedProduct ?? 0],Constants.storeProductIds);},
+     inAppEngine.handlePurchase(_products[selectedProduct ?? 0],Constants.storeProductIds);},
    child: Text("Buy $reward",
                 textAlign: TextAlign.center,
             style: const TextStyle(
