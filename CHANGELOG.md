@@ -1,3 +1,6 @@
+## 0.0.23
+- update docs
+
 ## 0.0.22 
 - Update packages and resolved some deprecations in the code.
 - Fixed some bugs.

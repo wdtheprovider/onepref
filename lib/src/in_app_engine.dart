@@ -63,8 +63,8 @@ class InAppEngine {
   }
 
   /// Launches the purchase flow dialog for a user to purchase.
-  Future<void> handlePurchase(
-      ProductDetails productDetails, List<ProductId> storeProductIds) async {
+  Future<void> handlePurchase(ProductDetails productDetails,
+      List<InAppEngineProductId> storeProductIds) async {
     try {
       final purchaseParam = Platform.isAndroid
           ? GooglePlayPurchaseParam(

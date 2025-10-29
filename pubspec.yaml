@@ -1,6 +1,6 @@
 name: onepref
 description: This package is a well-structured wrapper around Flutter’s in_app_purchase API that centralizes in-app purchase (IAP) logic for both Android (Google Play) and iOS (App Store).
-version: 0.0.22
+version: 0.0.23
 homepage: https://github.com/wdtheprovider/onepref
 
 environment:
