@@ -1,3 +1,8 @@
+## 0.0.22 
+- Update packages and resolved some deprecations in the code.
+- Fixed some bugs.
+- Supporting Google Play Billing Version 8
+
 ## 0.0.21
 
 - Update packages and resolved some deprecations in the code.

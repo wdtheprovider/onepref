@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class OnClickAnimation extends StatefulWidget {
   final Widget child;
   final Function onTap;
-  const OnClickAnimation({Key? key, required this.child, required this.onTap})
-      : super(key: key);
+  const OnClickAnimation({super.key, required this.child, required this.onTap});
   @override
   State<StatefulWidget> createState() => _OnClickAnimationState();
 }

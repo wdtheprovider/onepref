@@ -1,6 +1,6 @@
 name: onepref
-description: A package you can use to implement in app purchases easily and work with sharePreferences, other useful widgets to make your development easily.
-version: 0.0.21
+description: This package is a well-structured wrapper around Flutter’s in_app_purchase API that centralizes in-app purchase (IAP) logic for both Android (Google Play) and iOS (App Store).
+version: 0.0.22
 homepage: https://github.com/wdtheprovider/onepref
 
 environment:
@@ -11,9 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.5.3
-  in_app_purchase_android: ^0.4.0+4
+  in_app_purchase_android: ^0.4.0+6
   in_app_purchase_platform_interface: ^1.4.0
-  in_app_purchase_storekit: ^0.4.4
+  in_app_purchase_storekit: ^0.4.6
   in_app_purchase: ^3.2.3
 
 dev_dependencies:
