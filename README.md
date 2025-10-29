@@ -1,16 +1,30 @@
+# 🛠️ OnePref + InAppEngine
 
+This package is **endorsed**, which means you can simply use [`shared_preferences`](https://pub.dev/packages/shared_preferences) and [`in_app_purchase`](https://pub.dev/packages/in_app_purchase) normally.  
+This package will be automatically included in your app when you do — **no need to add it manually** to your `pubspec.yaml`.
 
-This package is endorsed, which means you can simply use shared_preferences and in_app_purchase normally. 
-This package will be automatically included in your app when you do, so you do not need to add it to your pubspec.yaml.
+---
 
-## Features
+## ✨ Features
 
-OnePref offers the same functionality shared_preferences package offers but in a friendly way and it has other in app purchase 
-functions to fast track your development when you add in app purchase in your application.
+**OnePref** provides the same functionality as `shared_preferences`, but in a **simpler, developer-friendly API**.  
+Additionally, it includes an **InAppEngine** utility that helps you **integrate in-app purchases quickly and safely** — saving you hours of setup time.
 
-## Getting started
+### Key Highlights
+- 🚀 Simplified preference storage using OnePref.
+- 💰 Streamlined in-app purchase management for Android & iOS.
+- 🧾 Support for both consumable and non-consumable products.
+- 🔁 Built-in subscription upgrade/downgrade support (Android).
+- 🧩 Easy product query and restore logic.
+- 🧠 Debug-friendly logs and structured `PurchaseResult`.
 
-```dart
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Install
+
+```bash
 flutter pub add onepref
 ```
 
@@ -19,91 +33,139 @@ import 'package:onepref/onepref.dart'
 ```
 
 ```dart
-//In your main.dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await OnePref.init();
   runApp(const MyApp());
 }
-
 ```
 
-## Usage
+## Write a value
 
 ```dart
-To Write
-
-OnePref.setString("key","value here");
+OnePref.setString("key", "value here");
 ```
 
-```dart
-Get the Value
+## Read a value
 
-const value = OnePref.getString("key");
+```dart
+final value = OnePref.getString("key");
 ```
 
-##  To get Products 
+## 🛒 Usage (In-App Purchases)
 
-```dart
-//declare these 
+```json
+⚠️ ATTENTION!
 
+Before using InAppEngine, make sure you have correctly configured in-app purchases
+in the Play Console (Android) or App Store Connect (iOS).
+```
+## Setup variables
+
+```dart 
 late final List<String> _notFoundIds = <String>[];
 late final List<ProductDetails> _products = <ProductDetails>[];
 late final List<PurchaseDetails> _purchases = <PurchaseDetails>[];
 late bool _isAvailable = false;
 late bool _purchasePending = false;
 
-InAppEngine inAppEngine = InAppEngine();
+final InAppEngine inAppEngine = InAppEngine.instance;
+```
 
-ATTENTATION !!!!!  ATTENTATION !!!!!   ATTENTATION !!!!!
-//(Please make sure you have configured in App purchase for your app)
+## Initialize and Query Products
+
+```dart 
 
 @override
 void initState() {
   super.initState();
-  
+
+  // Listen to purchase updates
   inAppEngine.inAppPurchase.purchaseStream.listen(
-          (List<PurchaseDetails> purchaseDetailsList) {
-        //listen to the purchases
-        listenToPurchaseUpdated(purchaseDetailsList);
-      }, onDone: () {}, onError: (Object error) {});
-  
-  getProducts();// calling get products
+    (List<PurchaseDetails> purchaseDetailsList) {
+      listenToPurchaseUpdated(purchaseDetailsList);
+    },
+    onDone: () {},
+    onError: (Object error) {
+      debugPrint("Purchase Stream Error: $error");
+    },
+  );
+
+  getProducts(); // Fetch product details
 }
 
-void getProducts() async {
-    // Querying the products from Google Play
-    await inAppEngine.getIsAvailable().then((isAvailable) async {
-      if (isAvailable) {
-        await inAppEngine
-            .queryProducts(Constants.storeProductIds)
-            .then((value) => {
-                  setState(() {
-                    _isAvailable = isAvailable;
-                    _products.addAll(value
-                        .productDetails); // Setting the returned products here.
-                    _notFoundIds.addAll(value
-                        .notFoundIDs); // Setting the returned notProductIds here.
-                    _purchasePending = false;
-                  })
-                });
-      }
+Future<void> getProducts() async {
+  final isAvailable = await inAppEngine.getIsAvailable();
+
+  if (isAvailable) {
+    final response = await inAppEngine.queryProducts(Constants.storeProductIds);
+
+    setState(() {
+      _isAvailable = isAvailable;
+      _products.addAll(response.productDetails);
+      _notFoundIds.addAll(response.notFoundIDs);
+      _purchasePending = false;
     });
+  } else {
+    debugPrint("Store not available.");
   }
-  
+}
 ```
 
-## HandlePurchase
+## Handle a Purchase
 
 ```dart
- TextButton(onPressed: () {
-     inAppEngine.handlePurchase(_products[selectedProduct ?? 0],Constants.storeProductIds);},
-   child: Text("Buy $reward",
-                textAlign: TextAlign.center,
-            style: const TextStyle(
-           color: Colors.white, fontSize: 14,
-          fontWeight: FontWeight.normal,
-       ),
-     ),
+TextButton(
+  onPressed: () {
+    final selected = _products[selectedProduct ?? 0];
+    inAppEngine.handlePurchase(selected, Constants.storeProductIds);
+  },
+  child: Text(
+    "Buy $reward",
+    textAlign: TextAlign.center,
+    style: const TextStyle(
+      color: Colors.white,
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+    ),
   ),
+),
+```
+
+## 🧩 Bonus: Restoring Purchases
+
+```dart
+ElevatedButton(
+  onPressed: () async {
+    await inAppEngine.restorePurchases();
+  },
+  child: const Text("Restore Purchases"),
+),
+```
+
+
+| Feature               | Description                           |
+| --------------------- | ------------------------------------- |
+| 🔹 Shared Preferences | Simple key/value storage with OnePref |
+| 🔹 Product Query      | Fetch Play/App Store products easily  |
+| 🔹 Purchase Handling  | Buy consumables & non-consumables     |
+| 🔹 Subscription       | Manage upgrades/downgrades on Android |
+| 🔹 Restore            | Restore past purchases with one line  |
+| 🔹 Debug Logging      | Built-in safe logging for dev mode    |
+
+
+## 📦 Example Integration Flow
+
+```dart
+final engine = InAppEngine.instance;
+
+await engine.initPurchaseStream(Constants.storeProductIds);
+
+final available = await engine.getIsAvailable();
+if (!available) return;
+
+final products = await engine.queryProducts(Constants.storeProductIds);
+if (products.productDetails.isNotEmpty) {
+  await engine.handlePurchase(products.productDetails.first, Constants.storeProductIds);
+}
 ```

@@ -1,3 +1,6 @@
+## 0.0.24
+- update read me file
+
 ## 0.0.23
 - update docs
 
