@@ -29,7 +29,7 @@ flutter pub add onepref
 ```
 
 ```dart
-import 'package:onepref/onepref.dart' 
+import 'package:onepref/onepref.dart';
 ```
 
 ```dart
@@ -43,26 +43,60 @@ void main() async {
 ## Write a value
 
 ```dart
-OnePref.setString("key", "value here");
+await OnePref.setString("key", "value here");
+await OnePref.setBool("darkMode", true);
+await OnePref.setInt("launchCount", 5);
 ```
 
 ## Read a value
 
 ```dart
 final value = OnePref.getString("key");
+final isDark = OnePref.getBool("darkMode");
+final count  = OnePref.getInt("launchCount");
 ```
+
+## Premium & Remove Ads helpers
+
+```dart
+// Write
+await OnePref.setPremium(true);
+await OnePref.setRemoveAds(true);
+
+// Read
+final isPremium   = OnePref.getPremium();
+final noAds       = OnePref.getRemoveAds();
+```
+
+## Other Utilities
+
+```dart
+// Check whether a key exists
+final exists = OnePref.containsKey("key");
+
+// String list support
+await OnePref.setStringList("items", ["a", "b", "c"]);
+final items = OnePref.getStringList("items");
+
+// Remove a single key or everything
+await OnePref.removeKey("key");
+await OnePref.removeAllSavedPrefs();
+```
+
+---
 
 ## 🛒 Usage (In-App Purchases)
 
-```json
+```
 ⚠️ ATTENTION!
 
 Before using InAppEngine, make sure you have correctly configured in-app purchases
 in the Play Console (Android) or App Store Connect (iOS).
 ```
+
 ## Setup variables
 
-```dart 
+```dart
 late final List<String> _notFoundIds = <String>[];
 late final List<ProductDetails> _products = <ProductDetails>[];
 late final List<PurchaseDetails> _purchases = <PurchaseDetails>[];
@@ -72,10 +106,19 @@ late bool _purchasePending = false;
 final InAppEngine inAppEngine = InAppEngine.instance;
 ```
 
+## Define your products
+
+```dart
+const storeProductIds = [
+  InAppEngineProductId(id: "premium_monthly", isConsumable: false, isSubscription: true),
+  InAppEngineProductId(id: "remove_ads",      isConsumable: false, isOneTimePurchase: true),
+  InAppEngineProductId(id: "coins_100",       isConsumable: true,  reward: 100),
+];
+```
+
 ## Initialize and Query Products
 
-```dart 
-
+```dart
 @override
 void initState() {
   super.initState();
@@ -98,7 +141,7 @@ Future<void> getProducts() async {
   final isAvailable = await inAppEngine.getIsAvailable();
 
   if (isAvailable) {
-    final response = await inAppEngine.queryProducts(Constants.storeProductIds);
+    final response = await inAppEngine.queryProducts(storeProductIds);
 
     setState(() {
       _isAvailable = isAvailable;
@@ -116,9 +159,12 @@ Future<void> getProducts() async {
 
 ```dart
 TextButton(
-  onPressed: () {
+  onPressed: () async {
     final selected = _products[selectedProduct ?? 0];
-    inAppEngine.handlePurchase(selected, Constants.storeProductIds);
+    final initiated = await inAppEngine.handlePurchase(selected, storeProductIds);
+    if (!initiated) {
+      debugPrint("Could not initiate purchase.");
+    }
   },
   child: Text(
     "Buy $reward",
@@ -132,15 +178,51 @@ TextButton(
 ),
 ```
 
-## 🧩 Bonus: Restoring Purchases
+## Handle Purchase Results
+
+```dart
+Future<void> listenToPurchaseUpdated(
+    List<PurchaseDetails> purchaseDetailsList) async {
+  final results = await inAppEngine.purchaseListener(
+    purchaseDetailsList: purchaseDetailsList,
+    productsIds: storeProductIds,
+  );
+
+  for (final result in results) {
+    if (result.purchaseComplete == true) {
+      debugPrint("Purchase completed: ${result.productId}");
+      await OnePref.setPremium(true);
+    } else if (result.purchaseRestore == true) {
+      debugPrint("Purchase restored: ${result.productId}");
+      await OnePref.setPremium(true);
+    } else if (result.purchaseConsumed == true) {
+      debugPrint("Consumable consumed: ${result.productId}");
+    } else if (result.message != null) {
+      debugPrint("Purchase message: ${result.message}");
+    }
+  }
+}
+```
+
+## 🧩 Restoring Purchases
 
 ```dart
 ElevatedButton(
   onPressed: () async {
     await inAppEngine.restorePurchases();
+    // Results arrive via the purchaseStream listener above
   },
   child: const Text("Restore Purchases"),
 ),
+```
+
+## 🔄 Subscription Upgrade / Downgrade (Android only)
+
+```dart
+final success = await inAppEngine.upgradeOrDowngradeSubscription(
+  currentSubPurchaseDetails, // existing GooglePlayPurchaseDetails
+  newSubProductDetails,      // new ProductDetails
+);
 ```
 
 
@@ -152,20 +234,3 @@ ElevatedButton(
 | 🔹 Subscription       | Manage upgrades/downgrades on Android |
 | 🔹 Restore            | Restore past purchases with one line  |
 | 🔹 Debug Logging      | Built-in safe logging for dev mode    |
-
-
-## 📦 Example Integration Flow
-
-```dart
-final engine = InAppEngine.instance;
-
-await engine.initPurchaseStream(Constants.storeProductIds);
-
-final available = await engine.getIsAvailable();
-if (!available) return;
-
-final products = await engine.queryProducts(Constants.storeProductIds);
-if (products.productDetails.isNotEmpty) {
-  await engine.handlePurchase(products.productDetails.first, Constants.storeProductIds);
-}
-```

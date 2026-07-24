@@ -1,3 +1,25 @@
+## 0.0.25
+
+### Bug Fixes
+- **[Fixed]** `OnePref` — Added `_ensureInitialized()` guard: methods now throw a clear `StateError` when `init()` was not called, instead of silently no-oping.
+- **[Fixed]** `OnePref` — All setter methods now correctly return `Future<bool>` instead of untyped `Future`.
+- **[Fixed]** `OnePref` — `getBool`, `getInt`, `getDouble` return types changed from nullable (`bool?`, `int?`, `double?`) to non-nullable since they already provide a fallback default.
+- **[Fixed]** `Benefit` — Widget fields made `final`; removed unnecessary `// ignore: must_be_immutable` suppression.
+- **[Fixed]** `Benefit` — Critical bug: the `icon` constructor parameter was being ignored. `Icons.check` was hardcoded in the build method. Now correctly uses the provided `icon`.
+- **[Fixed]** `OnClickAnimation` — Replaced `TickerProviderStateMixin` with `SingleTickerProviderStateMixin` (only one controller is used).
+- **[Fixed]** `OnClickAnimation` — `onTap` parameter type changed from untyped `Function` to `VoidCallback`.
+- **[Fixed]** `InAppEngine.upgradeOrDowngradeSubscription` — Replaced an unsafe `as` cast that would crash at runtime with a safe `is` type-check.
+- **[Fixed]** `InAppEngine.purchaseListener` — Loop now processes all purchases in the list instead of returning after the first item. This fixes batch restore events being silently discarded. Return type changed to `List<PurchaseResult>`.
+- **[Fixed]** `pubspec.yaml` — `platforms:` key moved inside the `flutter:` section where it belongs (was incorrectly at top level).
+- **[Fixed]** `README.md` — Removed references to `restorePurchases()` and `initPurchaseStream()` which did not exist. Updated all examples to match current APIs.
+
+### New Features
+- **[New]** `OnePref.setStringList(String key, List<String> value)` — Saves a list of strings.
+- **[New]** `OnePref.getStringList(String key)` — Reads a list of strings.
+- **[New]** `OnePref.containsKey(String key)` — Checks if a key exists.
+- **[New]** `InAppEngine.restorePurchases()` — Wraps `InAppPurchase.restorePurchases()`. Results arrive via the existing `purchaseStream`.
+- **[New]** `InAppEngine.handlePurchase` now returns `Future<bool>` indicating whether the purchase flow was successfully initiated.
+
 ## 0.0.24
 - update read me file
 

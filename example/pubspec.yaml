@@ -1,0 +1,23 @@
+name: onepref_example
+description: Demonstrates OnePref preferences storage and InAppEngine in-app purchase integration.
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  onepref:
+    path: ../
+  in_app_purchase: ^3.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

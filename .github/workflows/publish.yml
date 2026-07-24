@@ -1,3 +1,23 @@
+# Automated publishing to pub.dev
+#
+# This workflow uses OIDC (OpenID Connect) token-based authentication —
+# no credentials or secrets are needed.
+#
+# SETUP REQUIRED (one-time, on pub.dev):
+#   1. Go to https://pub.dev/packages/onepref/admin
+#   2. Under "Automated publishing", enable "GitHub Actions publishing"
+#   3. Set the repository to: wdtheprovider/onepref
+#   4. Set the tag pattern to: v{{version}}
+#
+# HOW TO PUBLISH:
+#   Bump the version in pubspec.yaml, commit, then push a tag:
+#
+#     git tag v0.0.25
+#     git push origin v0.0.25
+#
+# The workflow triggers on any tag matching v<major>.<minor>.<patch>
+# (and pre-release variants like v1.0.0-beta.1).
+
 name: Publish to pub.dev
 
 on:
@@ -6,9 +26,53 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
+  # ── 1. Validate ──────────────────────────────────────────────────────────────
+  validate:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos
+
+      - name: Run tests
+        run: flutter test --no-pub
+        # If you have no tests yet, this step will pass (no test files = success).
+
+  # ── 2. Publish ───────────────────────────────────────────────────────────────
   publish:
+    name: Publish to pub.dev
+    needs: validate          # Only publish if validate passes
+    runs-on: ubuntu-latest
+
     permissions:
-      id-token: write # Required for authentication using OIDC
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
-    # with:
-    #   working-directory: path/to/package/within/repository
+      id-token: write        # Required for OIDC authentication with pub.dev
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Publish package
+        run: flutter pub publish --force
